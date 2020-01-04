@@ -3,7 +3,7 @@ on:
     tags:
     - 'v*' 
 
-name: Release Client
+name: Release Client and Service
 
 jobs:
   build:
@@ -12,8 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Release the application
+      - name: Release the Client
         run: Invoke-Expression "docker run --rm -v $(pwd)\client:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 `"c:\app\scripts\release.bat`""
+
+      - name: Release the Service
+        run: Invoke-Expression "docker run --rm -v $(pwd)\service:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 `"c:\app\scripts\release.bat`""
       
       - name: Create Github Release
         id: create_release
@@ -26,13 +29,22 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset
-        id: upload-release-asset 
+      - name: Upload Client
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
           asset_path: ./client/publish/client.exe
           asset_name: client.exe
+          asset_content_type: application/exe
+
+      - name: Upload Server
+        uses: actions/upload-release-asset@v1.0.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: ./service/publish/service.exe
+          asset_name: service.exe
           asset_content_type: application/exe
