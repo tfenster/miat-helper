@@ -1,4 +1,4 @@
-name: Build Servuce
+name: Build Service
 
 on: [push]
 
