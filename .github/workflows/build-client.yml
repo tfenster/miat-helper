@@ -3,7 +3,7 @@ name: Build Client
 on: 
   push:
     paths:
-    - service/**
+    - client/**
     - .github/workflows/build-client.yml
 
 jobs:
@@ -19,5 +19,5 @@ jobs:
       run: Invoke-Expression "docker run --rm -v $(pwd)\client:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 `"c:\app\scripts\build.bat`""
     
     - name: Check results
-      run: if (Test-Path ".\client\publish\client.dll" -PathType Leaf) { Write-Host "Built application successfully" } else { Write-Error "Application failed to build" }
+      run: if (Test-Path ".\client\build\client.dll" -PathType Leaf) { Write-Host "Built application successfully" } else { Write-Error "Application failed to build" }
 
