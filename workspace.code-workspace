@@ -1,0 +1,85 @@
+{
+	"folders": [
+		{
+			"path": "client"
+		},
+		{
+			"path": "service"
+		}
+	],
+	"tasks": {
+		"tasks": [
+			{
+				"type": "docker-build",
+				"label": "docker-build: debug",
+				"dependsOn": [
+					"build"
+				],
+				"dockerBuild": {
+					"tag": "client:dev",
+					"target": "base",
+					"dockerfile": "${workspaceFolder}/Dockerfile",
+					"context": "${workspaceFolder}"
+				},
+				"netCore": {
+					"appProject": "${workspaceFolder}/client.csproj"
+				}
+			},
+			{
+				"type": "docker-build",
+				"label": "docker-build: release",
+				"dependsOn": [
+					"build"
+				],
+				"dockerBuild": {
+					"tag": "client:latest",
+					"dockerfile": "${workspaceFolder}/Dockerfile",
+					"context": "${workspaceFolder}"
+				},
+				"netCore": {
+					"appProject": "${workspaceFolder}/client.csproj"
+				}
+			},
+			{
+				"type": "docker-run",
+				"label": "docker-run: debug",
+				"dependsOn": [
+					"docker-build: debug"
+				],
+				"dockerRun": {
+					"os": "Windows"
+				},
+				"netCore": {
+					"appProject": "${workspaceFolder}/client.csproj",
+					"enableDebugging": true
+				}
+			},
+			{
+				"type": "docker-run",
+				"label": "docker-run: release",
+				"dependsOn": [
+					"docker-build: release"
+				],
+				"dockerRun": {
+					"os": "Windows"
+				},
+				"netCore": {
+					"appProject": "${workspaceFolder}/client.csproj"
+				}
+			}
+		]
+	},
+	"launch": {
+		"configurations": [
+			{
+				"name": "Docker .NET Core Launch",
+				"type": "docker",
+				"request": "launch",
+				"preLaunchTask": "docker-run: debug",
+				"netCore": {
+					"appProject": "${workspaceFolder}/client.csproj"
+				}
+			}
+		]
+	}
+}
