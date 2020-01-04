@@ -61,9 +61,10 @@ namespace service
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
             Thread.Sleep(100);
+            var requestedResource = File.ReadAllText(e.FullPath);
             File.Delete(e.FullPath);
 
-            var accessToken = GetToken();
+            var accessToken = GetToken(requestedResource);
             if (accessToken != null)
             {
                 _logger.LogInformation("Got a token");
@@ -77,11 +78,12 @@ namespace service
             }
         }
 
-        private string GetToken()
+        private string GetToken(string requestedResource)
         {
+            _logger.LogInformation($"token for resource {requestedResource} requested");
             if (_env.IsProduction())
             {
-                var request = (HttpWebRequest)WebRequest.Create("http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/");
+                var request = (HttpWebRequest)WebRequest.Create($"http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource={requestedResource}");
                 request.Headers["Metadata"] = "true";
                 request.Method = "GET";
 
@@ -105,7 +107,7 @@ namespace service
             {
                 const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,-+#?";
                 var token = new string(Enumerable.Repeat(chars, 1400).Select(s => s[random.Next(s.Length)]).ToArray());
-                Console.WriteLine($"token: {token}");
+                _logger.LogInformation($"token: {token}");
                 return token;
             }
         }

@@ -24,6 +24,12 @@ namespace client
                 Environment.Exit(1);
             }
 
+            var resource = config["resource"];
+            if (path == null) {
+                Console.WriteLine("Don't know for which resource to request a token, please provide configuration param --resource");
+                Environment.Exit(1);
+            }
+
             var guid = Guid.NewGuid();
             var requestPath = $"{path}\\{guid.ToString()}.request";
             using (FileSystemWatcher watcher = new FileSystemWatcher()) {
@@ -31,7 +37,7 @@ namespace client
                 watcher.Filter = $"{guid.ToString()}.response";
                 watcher.Created += OnCreated;
                 watcher.EnableRaisingEvents = true;
-                File.WriteAllText(requestPath, "");
+                File.WriteAllText(requestPath, resource);
 
                 while (Console.Read() != 'q') ;
             }
@@ -43,7 +49,6 @@ namespace client
             var tokenBytes = File.ReadAllBytes(e.FullPath);
             File.Delete(e.FullPath);
             var accessToken = Encoding.UTF8.GetString(tokenBytes);
-            Console.WriteLine("{ \"AccessToken\":\"" + accessToken + "\" }");
             Environment.Exit(0);
         }
     }

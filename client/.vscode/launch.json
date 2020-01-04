@@ -11,7 +11,7 @@
             "preLaunchTask": "build client",
             // If you have changed target frameworks, make sure to update the program path.
             "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/client.dll",
-            "args": ["--folder=C:\\Users\\tfenster8982"],
+            "args": ["--folder=C:\\Users\\tfenster8982", "--resource=https://management.azure.com/"],
             "cwd": "${workspaceFolder}",
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
