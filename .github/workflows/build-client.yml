@@ -12,5 +12,5 @@ jobs:
     - uses: actions/checkout@v1
       
     - name: Build the application
-      run: Invoke-Expression "docker run --rm -v $(pwd)\service:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 `"c:\app\scripts\build.bat`""
+      run: Invoke-Expression "docker run --rm -v $(pwd)\client:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 `"c:\app\scripts\build.bat`""
 
