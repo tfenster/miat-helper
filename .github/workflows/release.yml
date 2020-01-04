@@ -16,13 +16,13 @@ jobs:
         run: $version = ((Invoke-Expression "git describe --abbrev=0 --tags").Substring(1) + ".0.0"); Invoke-Expression "docker run --rm -v $(pwd)\client:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 c:\app\scripts\release.bat $version"
 
       - name: Check the Client
-        run: if (Test-Path ".\client\publish\client.dll" -PathType Leaf) { Write-Host "Built client successfully" } else { Write-Error "Client failed to build" }
+        run: if (Test-Path ".\client\publish\client.exe" -PathType Leaf) { Write-Host "Built client successfully" } else { Write-Error "Client failed to build" }
 
       - name: Release the Service
         run: $version = ((Invoke-Expression "git describe --abbrev=0 --tags").Substring(1) + ".0.0"); Invoke-Expression "docker run --rm -v $(pwd)\service:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 c:\app\scripts\release.bat $version"
 
       - name: Check the Service
-        run: if (Test-Path ".\service\publish\service.dll" -PathType Leaf) { Write-Host "Built service successfully" } else { Write-Error "Service failed to build" }
+        run: if (Test-Path ".\service\publish\service.exe" -PathType Leaf) { Write-Host "Built service successfully" } else { Write-Error "Service failed to build" }
       
       - name: Create Github Release
         id: create_release

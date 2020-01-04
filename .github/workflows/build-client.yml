@@ -5,6 +5,8 @@ on:
     paths:
     - client/**
     - .github/workflows/build-client.yml
+    tags-ignore:
+    - 'v*'
 
 jobs:
 

@@ -5,6 +5,8 @@ on:
     paths:
     - service/**
     - .github/workflows/build-service.yml
+    tags-ignore:
+    - 'v*'
 
 jobs:
 
