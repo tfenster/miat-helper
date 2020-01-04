@@ -1,7 +1,7 @@
 name: Build Service
 
 on: 
-  push
+  push:
     paths:
     - service/**
     - .github/*service*.yml
