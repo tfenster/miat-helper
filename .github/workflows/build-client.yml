@@ -1,6 +1,10 @@
 name: Build Client
 
-on: [push]
+on: 
+  push
+    paths:
+    - service/**
+    - .github/*client*.yml
 
 jobs:
 

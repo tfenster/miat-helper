@@ -1,6 +1,10 @@
 name: Build Service
 
-on: [push]
+on: 
+  push
+    paths:
+    - service/**
+    - .github/*service*.yml
 
 jobs:
 
