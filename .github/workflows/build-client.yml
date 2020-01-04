@@ -10,5 +10,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build the Docker image
-      run: docker run --rm -v .\service:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 "c:\app\scripts\build.bat"
+    - name: Build the application
+      run: docker run --rm -v .\miat-helper\service:c:\app  mcr.microsoft.com/dotnet/core/sdk:3.1-nanoserver-1809 "c:\app\scripts\build.bat"
+    
+    - name: Show folders
+      run: dir
