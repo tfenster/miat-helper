@@ -56,7 +56,9 @@
         "osDiskType": "StandardSSD_LRS",
         "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
         "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
-        "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]"
+        "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]",
+        "Reader": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+        "rbacGuid": "[newGuid()]"
     },
     "resources": [
         {
@@ -192,6 +194,19 @@
                 "protectedSettings": {
                 }
             }
+        },
+        {
+            "apiVersion": "2017-09-01",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "name": "[variables('rbacGuid')]",
+            "properties": {
+                "roleDefinitionId": "[variables('Reader')]",
+                "principalId": "[reference(concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName')), '2017-12-01', 'Full').identity.principalId]",
+                "scope": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name ,'/providers/Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+            },
+             "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+            ]
         }
     ],
     "outputs": {
