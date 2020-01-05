@@ -2,9 +2,6 @@
     "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "virtualMachineName": {
-            "type": "string"
-        },
         "adminPassword": {
             "type": "secureString"
         },
@@ -12,15 +9,19 @@
             "type": "string",
             "defaultValue": "VM-Administrator"
         },
+        "virtualMachineName": {
+            "type": "string",
+            "defaultValue": "miat-helper"
+        },
         "virtualMachineSize": {
             "type": "string",
             "defaultValue": "Standard_DS3_v2"
         }
     },
     "variables": {
-        "networkInterfaceName": "miat-helper109",
+        "networkInterfaceName": "[concat(parameters('virtualMachineName'),'109')]",
         "enableAcceleratedNetworking": true,
-        "networkSecurityGroupName": "miat-helper-nsg",
+        "networkSecurityGroupName": "[concat(parameters('virtualMachineName'),'-nsg')]",
         "networkSecurityGroupRules":[
                 {
                     "name": "RDP",
@@ -38,7 +39,7 @@
             ]
         ,
         "subnetName": "default",
-        "virtualNetworkName": "miat-helper-vnet",
+        "virtualNetworkName": "[concat(parameters('virtualMachineName'),'-vnet')]",
         "addressPrefixes": [
                 "10.10/24"
             ],
@@ -50,10 +51,9 @@
                     }
                 }
             ],
-        "publicIpAddressName": "miat-helper-ip",
+        "publicIpAddressName": "[concat(parameters('virtualMachineName'),'-ip')]",
         "publicIpAddressType": "Dynamic",
         "publicIpAddressSku": "Basic",
-        "virtualMachineName": "miat-helper",
         "osDiskType": "StandardSSD_LRS",
         "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
         "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
@@ -125,7 +125,7 @@
             }
         },
         {
-            "name": "[variables('virtualMachineName')]",
+            "name": "[parameters('virtualMachineName')]",
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2019-07-01",
             "location": "[resourceGroup().location]",
