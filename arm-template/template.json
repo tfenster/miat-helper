@@ -22,35 +22,34 @@
         "networkInterfaceName": "[concat(parameters('virtualMachineName'),'109')]",
         "enableAcceleratedNetworking": true,
         "networkSecurityGroupName": "[concat(parameters('virtualMachineName'),'-nsg')]",
-        "networkSecurityGroupRules":[
-                {
-                    "name": "RDP",
-                    "properties": {
-                        "priority": 300,
-                        "protocol": "TCP",
-                        "access": "Allow",
-                        "direction": "Inbound",
-                        "sourceAddressPrefix": "*",
-                        "sourcePortRange": "*",
-                        "destinationAddressPrefix": "*",
-                        "destinationPortRange": "3389"
-                    }
+        "networkSecurityGroupRules": [
+            {
+                "name": "RDP",
+                "properties": {
+                    "priority": 300,
+                    "protocol": "TCP",
+                    "access": "Allow",
+                    "direction": "Inbound",
+                    "sourceAddressPrefix": "*",
+                    "sourcePortRange": "*",
+                    "destinationAddressPrefix": "*",
+                    "destinationPortRange": "3389"
                 }
-            ]
-        ,
+            }
+        ],
         "subnetName": "default",
         "virtualNetworkName": "[concat(parameters('virtualMachineName'),'-vnet')]",
         "addressPrefixes": [
-                "10.10/24"
-            ],
-        "subnets":[
+            "10.1.0.0/24"
+        ],
+        "subnets": [
             {
-                    "name": "default",
-                    "properties": {
-                        "addressPrefix": "10.1.0.0/24"
-                    }
+                "name": "default",
+                "properties": {
+                    "addressPrefix": "10.1.0.0/24"
                 }
-            ],
+            }
+        ],
         "publicIpAddressName": "[concat(parameters('virtualMachineName'),'-ip')]",
         "publicIpAddressType": "Dynamic",
         "publicIpAddressSku": "Basic",
@@ -190,7 +189,8 @@
                     ],
                     "commandToExecute": "powershell -ExecutionPolicy Unrestricted -File init.ps1"
                 },
-                "protectedSettings": {}
+                "protectedSettings": {
+                }
             }
         }
     ],
