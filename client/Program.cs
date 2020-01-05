@@ -49,6 +49,7 @@ namespace client
             var tokenBytes = File.ReadAllBytes(e.FullPath);
             File.Delete(e.FullPath);
             var accessToken = Encoding.UTF8.GetString(tokenBytes);
+            Console.WriteLine(accessToken);
             Environment.Exit(0);
         }
     }
