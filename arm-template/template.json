@@ -170,7 +170,22 @@
             },
             "identity": {
                 "type": "systemAssigned"
-            }
+            },
+            "resources": [
+                {
+                    "apiVersion": "2017-09-01",
+                    "type": "Microsoft.Authorization/roleAssignments",
+                    "name": "[variables('rbacGuid')]",
+                    "properties": {
+                        "roleDefinitionId": "[variables('Reader')]",
+                        "principalId": "[reference(concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName')), '2017-12-01', 'Full').identity.principalId]",
+                        "scope": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name ,'/providers/Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+                    },
+                        "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
+                    ]
+                }
+            ]
         },
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
@@ -194,19 +209,6 @@
                 "protectedSettings": {
                 }
             }
-        },
-        {
-            "apiVersion": "2017-09-01",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "name": "[variables('rbacGuid')]",
-            "properties": {
-                "roleDefinitionId": "[variables('Reader')]",
-                "principalId": "[reference(concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName')), '2017-12-01', 'Full').identity.principalId]",
-                "scope": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name ,'/providers/Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
-            },
-             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
-            ]
         }
     ],
     "outputs": {
