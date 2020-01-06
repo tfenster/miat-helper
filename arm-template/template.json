@@ -57,7 +57,8 @@
         "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', variables('networkSecurityGroupName'))]",
         "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', variables('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', variables('subnetName'))]",
-        "Reader": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]"
+        "Reader": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+        "roleAssignmentGuid": "[concat(parameters('virtualMachineName'), '/Microsoft.Authorization/', guid(uniqueString(parameters('virtualMachineName'))))]"
     },
     "resources": [
         {
@@ -197,7 +198,7 @@
         {
             "apiVersion": "2018-09-01-preview",
             "type": "Microsoft.Compute/virtualMachines/providers/roleAssignments",
-            "name": "[concat(parameters('virtualMachineName'), '/Microsoft.Authorization/', guid(uniqueString(parameters('virtualMachineName'))))]",
+            "name": "[variables('roleAssignmentGuid')]",
             "properties": {
                 "roleDefinitionId": "[variables('Reader')]",
                 "principalId": "[reference(concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName')), '2017-12-01', 'Full').identity.principalId]"
