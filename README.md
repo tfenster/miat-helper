@@ -1,5 +1,5 @@
 # miat-helper
-Azure Managed Identity access token helper
+Azure Managed Identity access token helper, check https://tobiasfenster.io/using-azure-managed-identities-in-containers to find out more
 
 Click the button below to deploy
 
