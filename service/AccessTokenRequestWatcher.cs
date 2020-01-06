@@ -60,21 +60,34 @@ namespace service
 
         private void OnCreated(object sender, FileSystemEventArgs e)
         {
-            Thread.Sleep(100);
-            var requestedResource = File.ReadAllText(e.FullPath);
-            File.Delete(e.FullPath);
+            var requestedResource = "";
+            var retryCount = 0;
+            while (retryCount < 3) {
+                try {
+                    requestedResource = File.ReadAllText(e.FullPath);
+                    _logger.LogInformation("Got a request for " + requestedResource);
+                    File.Delete(e.FullPath);
+                } catch (IOException) {
+                    // might be blocked by the client or something else
+                    Thread.Sleep(1000);
+                } finally {
+                    retryCount++;
+                }
+            }
 
-            var accessToken = GetToken(requestedResource);
-            if (accessToken != null)
-            {
-                _logger.LogInformation("Got a token");
-                var tokenBytes = Encoding.UTF8.GetBytes(accessToken);
-                var inProgressPath = e.FullPath.Substring(0, e.FullPath.LastIndexOf(".")) + ".inprogress";
-                var resultPath = e.FullPath.Substring(0, e.FullPath.LastIndexOf(".")) + ".response";
-                File.WriteAllBytes(inProgressPath, tokenBytes);
-                File.Copy(inProgressPath, resultPath);
-                GrantAccess(resultPath);
-                File.Delete(inProgressPath);
+            if (requestedResource != "") {
+                var accessToken = GetToken(requestedResource);
+                if (accessToken != null)
+                {
+                    _logger.LogInformation("Got a token");
+                    var tokenBytes = Encoding.UTF8.GetBytes(accessToken);
+                    var inProgressPath = e.FullPath.Substring(0, e.FullPath.LastIndexOf(".")) + ".inprogress";
+                    var resultPath = e.FullPath.Substring(0, e.FullPath.LastIndexOf(".")) + ".response";
+                    File.WriteAllBytes(inProgressPath, tokenBytes);
+                    File.Copy(inProgressPath, resultPath);
+                    GrantAccess(resultPath);
+                    File.Delete(inProgressPath);
+                }
             }
         }
 

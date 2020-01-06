@@ -45,12 +45,22 @@ namespace client
 
         private static void OnCreated(object sender, FileSystemEventArgs e)
         {
-            Thread.Sleep(100);
-            var tokenBytes = File.ReadAllBytes(e.FullPath);
-            File.Delete(e.FullPath);
-            var accessToken = Encoding.UTF8.GetString(tokenBytes);
-            Console.WriteLine(accessToken);
-            Environment.Exit(0);
+            var retryCount = 0;
+            while (retryCount < 3) {
+                try {
+                    var tokenBytes = File.ReadAllBytes(e.FullPath);
+                    File.Delete(e.FullPath);
+                    var accessToken = Encoding.UTF8.GetString(tokenBytes);
+                    Console.WriteLine(accessToken);
+                    Environment.Exit(0);
+                } catch (IOException) {
+                    // might be blocked by the service or something else
+                    Thread.Sleep(1000);
+                } finally {
+                    retryCount++;
+                }
+            }
+            Environment.Exit(1);
         }
     }
 }
