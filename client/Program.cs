@@ -53,7 +53,7 @@ namespace client
                     var accessToken = Encoding.UTF8.GetString(tokenBytes);
                     Console.WriteLine(accessToken);
                     Environment.Exit(0);
-                } catch (IOException) {
+                } catch (Exception) {
                     // might be blocked by the service or something else
                     Thread.Sleep(1000);
                 } finally {
